@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MovingObject : MonoBehaviour
@@ -16,10 +17,13 @@ public class MovingObject : MonoBehaviour
     private bool canMove = true;
 
     private Animator animator;
+    private BoxCollider2D boxCollider2D;
+    public LayerMask layerMask;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
@@ -61,6 +65,21 @@ public class MovingObject : MonoBehaviour
 
             animator.SetFloat("DirX", vector.x);
             animator.SetFloat("DirY", vector.y);
+
+            RaycastHit2D hit;
+
+            Vector2 start = transform.position;
+            Vector2 end = start + new Vector2(vector.x * speed * walkCount, vector.y * speed * walkCount);
+
+            boxCollider2D.enabled = false;
+            hit = Physics2D.Linecast(start, end, layerMask);
+            boxCollider2D.enabled = true;
+
+            if(hit.transform != null)
+            {
+                break;
+            }
+
             animator.SetBool("Walking", true);
 
 
