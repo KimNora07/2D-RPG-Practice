@@ -23,6 +23,13 @@ public class MovingObject : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     public LayerMask layerMask;
 
+    public string walkSound_1;
+    public string walkSound_2;
+    public string walkSound_3;
+    public string walkSound_4;
+
+    private AudioManager audioManager;
+
     private void Awake()
     {
         if (instance == null)
@@ -30,6 +37,7 @@ public class MovingObject : MonoBehaviour
             instance = this;
             animator = GetComponent<Animator>();
             boxCollider2D = GetComponent<BoxCollider2D>();
+            audioManager = FindObjectOfType<AudioManager>();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -66,11 +74,11 @@ public class MovingObject : MonoBehaviour
             }
             vector.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), transform.position.z);
 
-            if(vector.x != 0)
+            if (vector.x != 0)
             {
                 vector.y = 0;
             }
-            else if(vector.y != 0)
+            else if (vector.y != 0)
             {
                 vector.x = 0;
             }
@@ -87,12 +95,29 @@ public class MovingObject : MonoBehaviour
             hit = Physics2D.Linecast(start, end, layerMask);
             boxCollider2D.enabled = true;
 
-            if(hit.transform != null)
+            if (hit.transform != null)
             {
                 break;
             }
 
             animator.SetBool("Walking", true);
+
+            int temp = Random.Range(1, 4);
+            switch (temp)
+            {
+                case 1:
+                    audioManager.Play(walkSound_1);
+                    break;
+                case 2:
+                    audioManager.Play(walkSound_2);
+                    break;
+                case 3:
+                    audioManager.Play(walkSound_3);
+                    break;
+                case 4:
+                    audioManager.Play(walkSound_4);
+                    break;
+            }
 
 
             while (currentWalkCount < walkCount)
