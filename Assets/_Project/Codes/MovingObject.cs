@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class MovingObject : MonoBehaviour
 {
+    public static MovingObject instance;
+    public string currentMapName;
+
     public float speed;
     private Vector3 vector;
     public float runSpeed;
@@ -20,10 +23,19 @@ public class MovingObject : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     public LayerMask layerMask;
 
-    private void Start()
+    private void Awake()
     {
-        animator = GetComponent<Animator>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
+        if (instance == null)
+        {
+            instance = this;
+            animator = GetComponent<Animator>();
+            boxCollider2D = GetComponent<BoxCollider2D>();
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
