@@ -10,6 +10,7 @@ public class TransformMap : MonoBehaviour
     public Transform target;
     private MovingObject player;
     private CameraManager cameraManager;
+    public BoxCollider2D targetBound;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class TransformMap : MonoBehaviour
     {
         if(collision.gameObject.name == "Character")
         {
+            cameraManager.SetBound(targetBound);
             player.transform.position = target.transform.position;
             cameraManager.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, cameraManager.transform.position.z);
         }
